@@ -25,12 +25,10 @@ if packages_info["results"]["exact"]:
 else:
     package_name = getPackageName(packages_info, "other")
 
-print(package_name)
 version_url = f"https://sources.debian.org/api/src/{package_name}/latest/"
 version_response = requests.get(version_url)
 version_info = json.loads(version_response.text)
 latest_version = version_info["version"]
 
-print(f"Package found: {package_name}")
 download_url = f"https://ftp.us.debian.org/debian/pool/main/{package_name[0]}/{package_name}/{original_package_name}_{latest_version}_amd64.deb"
-print(f"Download URL: {download_url}")
+print(download_url)
