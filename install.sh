@@ -42,7 +42,7 @@ downloadBig5(){
     echo_download "fzf"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || echo_error "fzf download failed"
     ~/.fzf/install
-    mv ~/.fzf/unninstall
+    ~/.fzf/unninstall
     mv ~/.fzf/bin/* $BIN_PATH && echo_succes "fzf installed" || echo_error "fzf install failed"
     rm -rf ~/.fzf
 
