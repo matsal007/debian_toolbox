@@ -1,4 +1,7 @@
 
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+sed -i 's/OSH_THEME="font"/OSH_THEME="robbyrussell"/g' ~/.bashrc
+
 [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
 
 INFO_COLOR='\033[1;34m'
