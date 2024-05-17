@@ -22,20 +22,22 @@ echo_error(){
 
 download_batppuccin(){
     echo_info "Creating ~/.config/bat/config"
-    mkdir -p "$(bat --config-dir)/themes" && echo_succes "Created ~/.config/bat/themes"
+    configdir="$HOME/.config/bat"
+
+    mkdir -p "$configdir/themes" && echo_succes "Created ~/.config/bat/themes"
 
     echo_download "Downloading themes"
-    wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
-    wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
-    wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
-    wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
+    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
+    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
+    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
 
-    configfile=$(bat --config-file)
+    configfile=$HOME/.config/bat/config
     touch "$configfile"
 
     echo_info "Building cache"
     bat cache --build && echo_succes "Built cache"
-    echo '--theme="Catppuccin Mocha"' >> ~/.config/bat/config && echo_succes "Added theme to config" || echo_error "Failed to add theme to config"
+    echo '--theme="Catppuccin Mocha"' >> "$configfile" && echo_succes "Added theme to config" || echo_error "Failed to add theme to config"
 }
 
 download_xcfe4_terminal_theme(){
@@ -46,11 +48,12 @@ download_xcfe4_terminal_theme(){
     wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-frappe.theme
     wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-latte.theme
     wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-mocha.theme
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme && echo_succes "Downloaded themes for xfce4 terminal"
+    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme && echo_succes "Downloaded themes for xfce4 terminal" || echo_error "Failed to download"
 }
 
 config_neovim(){
     file=$(<./templates/init.lua) || echo_error "Failed to read init.lua"
+    mkdir -p ~/.config/nvim
     touch ~/.config/nvim/init.lua
     echo "$file" > "$HOME/.config/nvim/init.lua" && echo_succes "Configured neovim"
 }
