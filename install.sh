@@ -1,8 +1,8 @@
 
 INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
-DOWNLOAD_COLOR='\033[1;32m'
-SUCCESS_COLOR='\033[1;33m'
+DOWNLOAD_COLOR='\033[1;35m'
+SUCCESS_COLOR='\033[1;32m'
 
 echo_info(){
     echo -e "${INFO_COLOR}[INFO] | $1${NO_COLOR}"
@@ -46,8 +46,9 @@ downloadBig5(){
 }
 
 downloadNeovim(){
+    echo_download "neovim-nightly"
     wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O "$HOME"/.local/bin/nvim
-    chmod +x "$HOME"/.local/bin/nvim
+    chmod +x "$HOME"/.local/bin/nvim && echo_succes "neovim-nightly installed"
 }
 
 downloadNeovim
