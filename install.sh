@@ -1,4 +1,6 @@
 
+[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
+
 INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
 DOWNLOAD_COLOR='\033[1;35m'
@@ -63,6 +65,7 @@ downloadNeovim(){
     chmod u+x "$nvim" && echo_succes "neovim-nightly installed"
 }
 
+
 mkdir -p $BIN_PATH
 
 downloadNeovim
@@ -77,7 +80,5 @@ do
     echo_info "Installing $package"
     indeb $i
 done
-
-[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
 
 $SHELL
