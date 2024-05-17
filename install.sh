@@ -3,6 +3,9 @@ INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
 DOWNLOAD_COLOR='\033[1;35m'
 SUCCESS_COLOR='\033[1;32m'
+ERROR_COLOR='\033[1;31m'
+
+HOME="~/"
 
 echo_info(){
     echo -e "${INFO_COLOR}[INFO] | $1${NO_COLOR}"
@@ -14,6 +17,10 @@ echo_download(){
 
 echo_succes(){
     echo -e "${SUCCESS_COLOR}[SUCCESS] | $1${NO_COLOR}"
+}
+
+echo_error(){
+    echo -e "${ERROR_COLOR}[ERROR] | $1${NO_COLOR}"
 }
 
 indeb(){
@@ -32,6 +39,7 @@ indeb(){
 }
 
 downloadBig5(){
+    echo_download "fzf"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/bin/fzf
     "$HOME"/.local/bin/fzf/install
 
@@ -47,7 +55,7 @@ downloadBig5(){
 
 downloadNeovim(){
     echo_download "neovim-nightly"
-    wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O "$HOME"/.local/bin/nvim
+    wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O "$HOME"/.local/bin/nvim || echo_error "neovim-nightly download failed"
     chmod +x "$HOME"/.local/bin/nvim && echo_succes "neovim-nightly installed"
 }
 
