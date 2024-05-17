@@ -40,8 +40,8 @@ indeb(){
 
 downloadBig5(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/bin/fzf || echo_error "fzf download failed"
-    "$BIN_PATH"/fzf/install || echo_error "fzf install failed"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/tmp/fzf || echo_error "fzf download failed"
+    mv ~/tmp/fzf/bin/* ~/.local/bin/ && echo_succes "fzf installed" || echo_error "fzf install failed"
 
     echo_download "tree"
     wget http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/ || echo_error "tree download failed"
@@ -56,8 +56,12 @@ downloadBig5(){
 
 downloadNeovim(){
     echo_download "neovim-nightly"
-    wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O "$BIN_PATH"/nvim || echo_error "neovim-nightly download failed"
-    chmod +x ~/.local/bin/nvim && echo_succes "neovim-nightly installed"
+    set -eu
+    nvim="$HOME/.local/bin/nvim"
+    nvimurl="https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
+    mkdir -p "$(dirname "$nvim")"
+    curl -fL "$nvimurl" -o "$nvim" -z "$nvim" || echo_error "neovim-nightly download failed"
+    chmod u+x "$nvim" && echo_succes "neovim-nightly installed"
 }
 
 mkdir -p $BIN_PATH
@@ -65,7 +69,7 @@ mkdir -p $BIN_PATH
 downloadNeovim
 mkdir -p /tmp/deb/installation
 
-[ cd /tmp/deb/ ] && cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
+[[ cd /tmp/deb/ ]] && cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
 downloadBig5
 
 for i in /tmp/deb/*.deb
