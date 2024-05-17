@@ -30,8 +30,8 @@ indeb(){
 
     echo_info "Unpacking $package_name"
 
-    ar -x *.deb
-    tar -xvf data.tar.xz
+    ar -x *.deb || echo_error "$package_name unpacking failed"
+    tar -xvf data.tar.xz || echo_error "$package_name unpacking data.tar.xa failed"
 
     echo_info "Moving $package_name to $HOME/.local/bin"
     mv usr/bin/* "$HOME"/.local/bin && echo_succes "$package_name installed"
@@ -40,24 +40,26 @@ indeb(){
 
 downloadBig5(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/bin/fzf
-    "$HOME"/.local/bin/fzf/install
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/bin/fzf || echo_error "fzf download failed"
+    "$HOME"/.local/bin/fzf/install || echo_error "fzf install failed"
 
     echo_download "tree"
-    wget http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/
+    wget http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/ || echo_error "tree download failed"
     echo_download "fd"
-    wget https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb -P /tmp/deb/
+    wget https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb -P /tmp/deb/ || echo_error "fd download failed"
     echo_download "bat"
-    wget https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb -P /tmp/deb/
+    wget https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb -P /tmp/deb/ || echo_error "bat download failed"
     echo_download "ripgrep"
-    wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -P /tmp/deb/
+    wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -P /tmp/deb/ || echo_error "ripgrep download failed"
 }
 
 downloadNeovim(){
     echo_download "neovim-nightly"
-    wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O "$HOME"/.local/bin/nvim || echo_error "neovim-nightly download failed"
+    wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O "$HOME/.local/bin/nvim" || echo_error "neovim-nightly download failed"
     chmod +x "$HOME"/.local/bin/nvim && echo_succes "neovim-nightly installed"
 }
+
+mkdir -p "$HOME"/.local/bin
 
 downloadNeovim
 mkdir -p /tmp/deb/installation
