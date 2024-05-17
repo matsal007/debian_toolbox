@@ -1,6 +1,8 @@
 
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 
+[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
+
 INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
 DOWNLOAD_COLOR='\033[1;35m'
@@ -73,6 +75,7 @@ downloadNeovim
 mkdir -p /tmp/deb/installation
 
 cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
+
 downloadBig5
 
 for i in /tmp/deb/*.deb
