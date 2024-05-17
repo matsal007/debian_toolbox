@@ -40,8 +40,8 @@ indeb(){
 
 downloadBig5(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git /tmp/fzf || echo_error "fzf download failed"
-    /tmp/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || echo_error "fzf download failed"
+    ~/.fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
 
     echo_download "tree"
     wget http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/ || echo_error "tree download failed"
