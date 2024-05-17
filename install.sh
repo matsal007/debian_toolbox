@@ -68,7 +68,7 @@ mkdir -p $BIN_PATH
 downloadNeovim
 mkdir -p /tmp/deb/installation
 
-[[ cd /tmp/deb/ ]] && cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
+cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
 downloadBig5
 
 for i in /tmp/deb/*.deb
