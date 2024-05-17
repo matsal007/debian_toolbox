@@ -40,20 +40,21 @@ indeb(){
     rm -rf * 
 }
 
+downloadPackage(){
+    package_name=$(echo $1 | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
+    echo_download "$package_name"
+    wget $1 -P /tmp/deb/ || echo_error "$package_name download failed"
+}
+
 downloadBig5(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || echo_error "fzf download failed"
-    ~/.fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/bin/fzf || echo_error "fzf download failed"
+    ~/.local/bin/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
 
-    echo_download "tree"
-    wget http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/ || echo_error "tree download failed"
-    echo_download "fd"
-    wget https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb -P /tmp/deb/ || echo_error "fd download failed"
-    echo_download "bat"
-    wget https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb -P /tmp/deb/ || echo_error "bat download failed"
-    echo_download "ripgrep"
-    wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -P /tmp/deb/ || echo_error "ripgrep download failed"
-
+    downloadPackage http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/
+    downloadPackage https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb -P /tmp/deb/
+    downloadPackage https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb -P /tmp/deb/
+    downloadPackage https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -P /tmp/deb/
 }
 
 downloadNeovim(){
@@ -81,4 +82,3 @@ do
     indeb $i
 done
 
-$SHELL
