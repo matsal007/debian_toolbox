@@ -31,7 +31,7 @@ indeb(){
     echo_info "Unpacking $package_name"
 
     ar -x *.deb || echo_error "$package_name unpacking failed"
-    tar -xvf data.tar.xz || echo_error "$package_name unpacking data.tar.xa failed"
+    tar -xvf data.tar.xz || echo_error "$package_name unpacking data.tar.xz failed"
 
     echo_info "Moving $package_name to ~/.local/bin"
     mv usr/bin/* ~/.local/bin && echo_succes "$package_name installed"
@@ -40,8 +40,8 @@ indeb(){
 
 downloadBig5(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/tmp/fzf || echo_error "fzf download failed"
-    mv ~/tmp/fzf/bin/* ~/.local/bin/ && echo_succes "fzf installed" || echo_error "fzf install failed"
+    git clone --depth 1 https://github.com/junegunn/fzf.git /tmp/fzf || echo_error "fzf download failed"
+    ~/.local/bin/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
 
     echo_download "tree"
     wget http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/ || echo_error "tree download failed"
@@ -56,7 +56,6 @@ downloadBig5(){
 
 downloadNeovim(){
     echo_download "neovim-nightly"
-    set -eu
     nvim="$HOME/.local/bin/nvim"
     nvimurl="https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
     mkdir -p "$(dirname "$nvim")"
