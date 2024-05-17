@@ -56,22 +56,21 @@ config_neovim(){
     file=$(<./templates/init.lua) || echo_error "Failed to read init.lua"
     mkdir -p ~/.config/nvim
     touch ~/.config/nvim/init.lua
-    echo "$file" > "$HOME/.config/nvim/init.lua" && echo_succes "Configured neovim"
+    echo "$file" >> "$HOME/.config/nvim/init.lua" && echo_succes "Configured neovim"
 }
 
 config_shell(){
     sed -i 's/OSH_THEME="font"/OSH_THEME="robbyrussell"/g' ~/.bashrc
     [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
 
-    file=$(<./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
-    echo "$file" > "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    file=$(cat ./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
+    echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    cat ~/.bashrc
 
-    file=$(<./templates/functions.sh) || echo_error "Failed to read functions.sh"
-    echo "$file" > "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
+    echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    cat ~/.bashrc
 }
-
-echo_info "Installing catppuccin for bat"
-download_batppuccin
 
 echo_info "Installing catppuccin for xfce4 terminal"
 download_xcfe4_terminal_theme
@@ -81,4 +80,7 @@ config_neovim
 
 echo_info "Configuring shell"
 config_shell
+
+echo_info "Installing catppuccin for bat"
+download_batppuccin
 
