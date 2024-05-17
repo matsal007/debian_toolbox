@@ -30,6 +30,9 @@ download_batppuccin(){
     wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
     wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
 
+    configfile=$(bat --config-file)
+    touch "$configfile"
+
     echo_info "Building cache"
     bat cache --build && echo_succes "Built cache"
     echo '--theme="Catppuccin Mocha"' >> ~/.config/bat/config && echo_succes "Added theme to config" || echo_error "Failed to add theme to config"
@@ -48,14 +51,16 @@ download_xcfe4_terminal_theme(){
 
 config_neovim(){
     file=$(<./templates/init.lua) || echo_error "Failed to read init.lua"
+    touch ~/.config/nvim/init.lua
     echo "$file" > "$HOME/.config/nvim/init.lua" && echo_succes "Configured neovim"
 }
 
 config_shell(){
+    sed -i 's/OSH_THEME="font"/OSH_THEME="robbyrussell"/g' ~/.bashrc
     file=$(<./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
-    echo "$file" > "$HOME/.bashrc" && echo_succes "Configured shell"
+    echo "$file" > "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
     file=$(<./templates/functions.sh) || echo_error "Failed to read functions.sh"
-    echo "$file" > "$HOME/.bashrc" && echo_succes "Configured shell"
+    echo "$file" > "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
 }
 
 echo_info "Installing catppuccin for bat"
