@@ -1,8 +1,6 @@
 
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 
-[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
-
 INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
 DOWNLOAD_COLOR='\033[1;35m'
@@ -50,8 +48,8 @@ downloadPackage(){
 
 downloadBig5(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/bin/fzf || echo_error "fzf download failed"
-    ~/.local/bin/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.config/fzf || echo_error "fzf download failed"
+    ~/.config/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
 
     downloadPackage http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/
     downloadPackage https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb -P /tmp/deb/
@@ -76,6 +74,7 @@ mkdir -p /tmp/deb/installation
 
 cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
 
+[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
 downloadBig5
 
 for i in /tmp/deb/*.deb

@@ -1,4 +1,5 @@
 
+BIN_PATH=$HOME/.local/bin
 INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
 DOWNLOAD_COLOR='\033[1;35m'
@@ -61,15 +62,11 @@ config_neovim(){
 
 config_shell(){
     sed -i 's/OSH_THEME="font"/OSH_THEME="robbyrussell"/g' ~/.bashrc
-    [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc
-
     file=$(cat ./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
-    cat ~/.bashrc
-
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
-    cat ~/.bashrc
+    [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
 }
 
 echo_info "Installing catppuccin for xfce4 terminal"
