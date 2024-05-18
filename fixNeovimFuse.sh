@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd /tmp/deb/installation
+mkdir -p ~/.local/share/
 nvim --appimage-extract
 
 mv squashfs-root/usr/bin/* ~/.local/bin/

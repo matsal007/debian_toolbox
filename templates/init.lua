@@ -468,7 +468,7 @@ Map({ normal, visual }, "<C-d>", "<C-d>zz")
 
 -- Executing Lines
 Map({ normal }, leader .. "x", ":.lua<cr>", { desc = "Execute Line with Lua" })
-Map({ normal, visual }, leader .. "<CR>", ":.!zsh<CR>", { desc = "Run line in Zsh Shell" })
+Map({ normal, visual }, leader .. "<CR>", ":.!bash<CR>", { desc = "Run line in Bash Shell" })
 
 Map({ normal }, leader .. leader .. "x", ":so<cr>", { desc = "Execute the current file" })
 
