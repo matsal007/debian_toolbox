@@ -311,7 +311,6 @@ local plugins = {
 				},
 			})
 
-			require("salvadego.core.functions")
 			local normal = "n"
 			local leader = "<leader>"
 
@@ -357,8 +356,6 @@ local plugins = {
 			})
 
 			telescope.load_extension("fzf")
-
-			require("salvadego.core.functions")
 
 			local normal = "n"
 
@@ -464,7 +461,7 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
-	{ import = plugins },
+	plugins,
 }, {
 	checker = {
 		enable = true,
