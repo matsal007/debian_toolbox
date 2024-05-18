@@ -47,17 +47,17 @@ download_xcfe4_terminal_theme(){
     mkdir -p ~/.local/share/xfce4/terminal/colorschemes/ && echo_succes "Created ~/.local/share/xfce4/terminal/colorschemes/" || echo_error "Failed to create ~/.local/share/xfce4/terminal/colorschemes/"
 
     echo_download "Downloading themes"
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-frappe.theme
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-latte.theme
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-mocha.theme
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme && echo_succes "Downloaded themes for xfce4 terminal" || echo_error "Failed to download"
+    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-frappe.theme && echo_succes "Downloaded frappe for xfce4 terminal" || echo_error "Failed to download"
+    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-latte.theme && echo_succes "Downloaded latte for xfce4 terminal" || echo_error "Failed to download"
+    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-mocha.theme && echo_succes "Downloaded mocha for xfce4 terminal" || echo_error "Failed to download"
+    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme && echo_succes "Downloaded macchiato for xfce4 terminal" || echo_error "Failed to download"
 }
 
 config_neovim(){
     file=$(<./templates/init.lua) || echo_error "Failed to read init.lua"
-    mkdir -p ~/.config/nvim
-    touch ~/.config/nvim/init.lua
-    echo "$file" >> "$HOME/.config/nvim/init.lua" && echo_succes "Configured neovim"
+    mkdir -p ~/.config/nvim && echo_info "Created ~/.config/nvim"
+    touch ~/.config/nvim/init.lua && echo_info "Created ~/.config/nvim/init.lua" || echo_error "Failed to create ~/.config/nvim/init.lua"
+    echo "$file" >> "$HOME/.config/nvim/init.lua" && echo_succes "Configured neovim" || echo_error "Failed to write to init.lua"
 }
 
 config_shell(){
@@ -67,9 +67,10 @@ config_shell(){
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
     cd Downloads || mkdir Downloads && cd Downloads
-    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
-    mkdir -p ~/.fonts
-    unzip "*.zip" "*.ttf" "*.otf" -d ${HOME}/.fonts && fc-cache -f -v
+
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip && echo_succes "Downloaded JetBrainsMono"
+    mkdir -p ~/.fonts && echo_info "Extracting fonts"
+    unzip "*.zip" "*.ttf" "*.otf" -d ${HOME}/.fonts && fc-cache -f -v && echo_succes "Extracted fonts" || echo_error "Failed to extract fonts"
 }
 
 echo_info "Installing catppuccin for xfce4 terminal"
