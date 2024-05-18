@@ -29,7 +29,7 @@ function gbc(){
 }
 
 function frg(){
-	result=$(rg --color=always --line-number --no-heading --smart-case -g '!node_modules' "${*:-}" | fzf --ansi \
+	result=$(rg -H --color=always --line-number --no-heading --smart-case -g '!node_modules' "${*:-}" | fzf --ansi \
 		--color "hl:-1:underline,hl+:-1:underline:reverse" \
 		--delimiter : \
 		--preview 'bat --color=always {1} --highlight-line {2}' \
