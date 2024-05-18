@@ -104,7 +104,7 @@ opt.scrolloff = 10
 opt.colorcolumn = "90"
 opt.undofile = true
 opt.updatetime = 25
-opt.list = true
+opt.list = false
 opt.listchars = { trail = "·", nbsp = "␣", eol = "󱞣", tab = "  " }
 opt.inccommand = "split"
 

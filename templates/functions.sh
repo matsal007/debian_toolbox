@@ -1,16 +1,14 @@
-
-#functions.sh
-
-#Misc
-
-function ..() {
+#FUNCTIONS
+function up() {
 	local count=$1
 	local path=""
 	while [ $count -gt 0 ]; do
 		path="../$path"
-		let count=count-1
+		count=$((count - 1))
 	done
+	echo "Changing directory to $path"
 	cd $path
+	echo "Current directory: $(pwd)"
 }
 
 function fcd() {
@@ -29,7 +27,7 @@ function gbc(){
 }
 
 function frg(){
-	result=$(rg -H --color=always --line-number --no-heading --smart-case -g '!node_modules' "${*:-}" | fzf --ansi \
+	result=$(rg --hidden --color=always --line-number --no-heading --smart-case -g '!node_modules' "${*:-}" | fzf --ansi \
 		--color "hl:-1:underline,hl+:-1:underline:reverse" \
 		--delimiter : \
 		--preview 'bat --color=always {1} --highlight-line {2}' \
@@ -50,6 +48,5 @@ function fmv(){
 
     mv -v "$file" "$dest"
 }
-
-#end Misc
+#END FUNCTIONS
 
