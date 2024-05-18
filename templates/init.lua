@@ -390,6 +390,71 @@ local plugins = {
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 		},
 	},
+
+	{
+		"nvim-treesitter/nvim-treesitter",
+		event = { "BufReadPre", "BufNewFile" },
+		build = "TSUpdate",
+		dependencies = {
+			"windwp/nvim-ts-autotag",
+		},
+
+		config = function()
+			local treesitter = require("nvim-treesitter.configs")
+			treesitter.setup({
+				highlight = { enable = true },
+				indent = { enable = true },
+				autotag = { enable = true },
+				ensure_installed = {
+					"json",
+					"javascript",
+					"typescript",
+					"html",
+					"python",
+					"css",
+					"bash",
+					"lua",
+					"vim",
+					"gitignore",
+					"vimdoc",
+				},
+
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "<C-space>",
+						node_incremental = "<C-space>",
+						scope_incremental = false,
+						node_decremental = "<bs>",
+					},
+				},
+			})
+		end,
+	},
+
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		build = "TSUpdate",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				textobjects = {
+					select = {
+						enable = true,
+						lookahead = true,
+						keymaps = {
+							["aa"] = "@param.outer",
+							["ia"] = "@param.inner",
+							["af"] = "@function.outer",
+							["if"] = "@function.inner",
+							["ac"] = "@class.outer",
+							["ic"] = "@class.inner",
+						},
+					},
+				},
+			})
+		end,
+	},
 }
 
 local normal = "n"
