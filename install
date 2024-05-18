@@ -1,1 +1,1 @@
-cd ~/debian_toolbox ; ./install.sh ; ./get_config.sh ; source ../.bashrc ; ./fixNeovimFuse.sh ; cd
+./install.sh ; ./get_config.sh ; source ../.bashrc ; ./fixNeovimFuse.sh ; cd
