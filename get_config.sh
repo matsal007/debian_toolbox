@@ -66,6 +66,10 @@ config_shell(){
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    cd Downloads || mkdir Downloads && cd Downloads
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
+    mkdir -p ~/.fonts
+    unzip "*.zip" "*.ttf" "*.otf" -d ${HOME}/.fonts && fc-cache -f -v
 }
 
 echo_info "Installing catppuccin for xfce4 terminal"

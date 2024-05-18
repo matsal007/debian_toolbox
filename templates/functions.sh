@@ -32,7 +32,7 @@ function frg(){
 		--delimiter : \
 		--preview 'bat --color=always {1} --highlight-line {2}' \
 		--preview-window 'up,60%,border-bottom,+{2}+3/3,~3')
-	
+
 	filename=$(echo $result | cut -d':' -f1)
 	line=$(echo $result | cut -d':' -f2)
 	nvim "$filename" +"${line}"
@@ -43,10 +43,10 @@ function fkill(){
 }
 
 function fmv(){
-    file=$(fd . ~ -H -t f | fzf -m --preview 'bat --color=always {}')
-    dest=$(fd . ~ -H -t d | fzf --preview 'tree -L 1 {}')
+	file=$(fd . ~ -H -t f | fzf -m --preview 'bat --color=always {}')
+	dest=$(fd . ~ -H -t d | fzf --preview 'tree -L 1 {}')
 
-    mv -v "$file" "$dest"
+	mv -v "$file" "$dest"
 }
 #END FUNCTIONS
 
