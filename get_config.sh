@@ -66,7 +66,6 @@ config_shell(){
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
-    [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
 }
 
 echo_info "Installing catppuccin for xfce4 terminal"
