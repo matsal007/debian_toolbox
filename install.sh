@@ -84,7 +84,7 @@ mkdir -p /tmp/deb/installation
 
 cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
 
-[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='\$PATH:${BIN_PATH}'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
+[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='${PATH}:${BIN_PATH}'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
 downloadBig5
 
 for i in /tmp/deb/*.deb
