@@ -25,15 +25,14 @@ echo_error(){
     echo -e "${ERROR_COLOR}[ERROR] | $1${NO_COLOR}"
 }
 
-ask(){
+ask() {
     message=$1
     read -p "$message ([y]/n) " answer
-
-    if [ -z "$answer" ]; then
+    if [[ $answer =~ ^[[:space:]]*$ ]]; then
         return 0
+    else
+        return 1
     fi
-
-    return 1
 }
 
 indeb(){
@@ -91,8 +90,7 @@ downloadBig5
 for i in /tmp/deb/*.deb
 do
     package=$(echo $i | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
-    ask "Install $package?"
-    if [ $? -eq 1 ]; then
+    if ask "Install $package?"; then
         echo_info "Installing $package"
         indeb $i
     fi

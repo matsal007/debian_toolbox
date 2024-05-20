@@ -22,17 +22,14 @@ echo_error(){
     echo -e "${ERROR_COLOR}[ERROR] | $1${NO_COLOR}"
 }
 
-ask(){
+ask() {
     message=$1
-    default=$2
-
-    read -p "$message [$default] " answer
-
-    if [ -z "$answer" ]; then
+    read -p "$message ([y]/n) " answer
+    if [[ $answer =~ ^[[:space:]]*$ ]]; then
         return 0
+    else
+        return 1
     fi
-
-    return 1
 }
 
 download(){
@@ -90,26 +87,22 @@ config_shell(){
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
 }
 
-ask "Install catppuccin for xfce4 terminal?" "y"
-if [ $? -eq 1 ]; then
+if ask "Install catppuccin for xfce4 terminal?"; then
     echo_info "Installing catppuccin for xfce4 terminal"
     download_xcfe4_terminal_theme
 fi
 
-ask "Configure neovim?" "y"
-if [ $? -eq 1 ]; then
+if ask "Configure neovim?"; then
     echo_info "Configuring neovim"
     config_neovim
 fi
 
-ask "Configure shell?" "y"
-if [ $? -eq 1 ]; then
+if ask "Configure shell?"; then
     echo_info "Configuring shell"
     config_shell
 fi
 
-ask "Install catppuccin for bat?" "y"
-if [ $? -eq 1 ]; then
+if ask "Install catppuccin for bat?"; then
     echo_info "Installing catppuccin for bat"
     download_batppuccin
 fi
