@@ -81,6 +81,7 @@ config_neovim(){
 
 config_shell(){
     sed -i 's/OSH_THEME="font"/OSH_THEME="robbyrussell"/g' ~/.bashrc
+    echo "set -o vi" >> ~/.bashrc
     file=$(cat ./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"

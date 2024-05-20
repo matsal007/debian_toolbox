@@ -46,7 +46,7 @@ indeb(){
     tar -xvf data.tar.xz || echo_error "$package_name unpacking data.tar.xz failed"
 
     echo_info "Moving $package_name to ~/.local/bin"
-    mv usr/bin/* ~/.local/bin && echo_succes "$package_name installed"
+    mv usr/bin/* "${BIN_PATH}" && echo_succes "$package_name installed"
     rm -rf * 
 }
 
@@ -69,7 +69,7 @@ downloadBig5(){
 
 downloadNeovim(){
     echo_download "neovim-nightly"
-    nvim="$HOME/.local/bin/nvim"
+    nvim="${BIN_PATH}/nvim"
     nvimurl="https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
     mkdir -vp "$(dirname "$nvim")"
     curl -fL "$nvimurl" -o "$nvim" -z "$nvim" >> /dev/null && echo_succes "neovim-nightly downloaded" || echo_error "neovim-nightly download failed"
@@ -84,7 +84,7 @@ mkdir -p /tmp/deb/installation
 
 cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
 
-[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='$PATH:$BIN_PATH'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
+[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='\$PATH:${BIN_PATH}'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
 downloadBig5
 
 for i in /tmp/deb/*.deb
