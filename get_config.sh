@@ -11,7 +11,7 @@ echo_info(){
 }
 
 echo_download(){
-    echo -e "${DOWNLOAD_COLOR}[DOWNLOAD] | $1${NO_COLOR}"
+    echo -e "${DOWNLOAD_COLOR}[DOWNLOADING] | $1${NO_COLOR}"
 }
 
 echo_succes(){
@@ -22,17 +22,39 @@ echo_error(){
     echo -e "${ERROR_COLOR}[ERROR] | $1${NO_COLOR}"
 }
 
+ask(){
+    message=$1
+    default=$2
+
+    read -p "$message [$default] " answer
+
+    if [ -z "$answer" ]; then
+        return 0
+    fi
+
+    return 1
+}
+
+download(){
+    path=$1
+    link=$2
+    success_message=$3
+    name=$(echo $link | rev | cut -d'/' -f1 | rev | cut -d'.' -f1)
+
+    echo_download "$name"
+    wget -P $path $link >> /dev/null && echo_succes "$success_message" || echo_error "Failed to download $name"
+}
+
 download_batppuccin(){
     echo_info "Creating ~/.config/bat/config"
     configdir="$HOME/.config/bat"
 
     mkdir -p "$configdir/themes" && echo_succes "Created ~/.config/bat/themes"
 
-    echo_download "Downloading themes"
-    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
-    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
-    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
-    wget -P "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+    download "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme "Latte downloaded"
+    download "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme "Frappe downloaded"
+    download "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme "Macchiato downloaded"
+    download "$configdir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme "Mocha downloaded"
 
     configfile=$HOME/.config/bat/config
     touch "$configfile"
@@ -47,10 +69,10 @@ download_xcfe4_terminal_theme(){
     mkdir -p ~/.local/share/xfce4/terminal/colorschemes/ && echo_succes "Created ~/.local/share/xfce4/terminal/colorschemes/" || echo_error "Failed to create ~/.local/share/xfce4/terminal/colorschemes/"
 
     echo_download "Downloading themes"
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-frappe.theme && echo_succes "Downloaded frappe for xfce4 terminal" || echo_error "Failed to download"
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-latte.theme && echo_succes "Downloaded latte for xfce4 terminal" || echo_error "Failed to download"
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-mocha.theme && echo_succes "Downloaded mocha for xfce4 terminal" || echo_error "Failed to download"
-    wget -P ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme && echo_succes "Downloaded macchiato for xfce4 terminal" || echo_error "Failed to download"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-frappe.theme "Downloaded frappe for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-latte.theme "Downloaded latte for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-mocha.theme "Downloaded mocha for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme "Downloaded macchiato for xfce4 terminal"
 }
 
 config_neovim(){
@@ -68,15 +90,27 @@ config_shell(){
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
 }
 
-#echo_info "Installing catppuccin for xfce4 terminal"
-#download_xcfe4_terminal_theme
+ask "Install catppuccin for xfce4 terminal?" "y"
+if [ $? -eq 1 ]; then
+    echo_info "Installing catppuccin for xfce4 terminal"
+    download_xcfe4_terminal_theme
+fi
 
-echo_info "Configuring neovim"
-config_neovim
+ask "Configure neovim?" "y"
+if [ $? -eq 1 ]; then
+    echo_info "Configuring neovim"
+    config_neovim
+fi
 
-echo_info "Configuring shell"
-config_shell
+ask "Configure shell?" "y"
+if [ $? -eq 1 ]; then
+    echo_info "Configuring shell"
+    config_shell
+fi
 
-echo_info "Installing catppuccin for bat"
-download_batppuccin
+ask "Install catppuccin for bat?" "y"
+if [ $? -eq 1 ]; then
+    echo_info "Installing catppuccin for bat"
+    download_batppuccin
+fi
 

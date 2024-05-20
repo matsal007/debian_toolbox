@@ -25,6 +25,17 @@ echo_error(){
     echo -e "${ERROR_COLOR}[ERROR] | $1${NO_COLOR}"
 }
 
+ask(){
+    message=$1
+    read -p "$message ([y]/n) " answer
+
+    if [ -z "$answer" ]; then
+        return 0
+    fi
+
+    return 1
+}
+
 indeb(){
     package_name=$(echo $1 | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
     cd /tmp/deb/installation
@@ -43,7 +54,7 @@ indeb(){
 downloadPackage(){
     package_name=$(echo $1 | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
     echo_download "$package_name"
-    wget $1 -P /tmp/deb/ || echo_error "$package_name download failed"
+    wget $1 -P /tmp/deb/ >> /dev/null && echo_succes "$package_name downloaded" || echo_error "$package_name download failed"
 }
 
 downloadBig5(){
@@ -61,8 +72,8 @@ downloadNeovim(){
     echo_download "neovim-nightly"
     nvim="$HOME/.local/bin/nvim"
     nvimurl="https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
-    mkdir -p "$(dirname "$nvim")"
-    curl -fL "$nvimurl" -o "$nvim" -z "$nvim" || echo_error "neovim-nightly download failed"
+    mkdir -vp "$(dirname "$nvim")"
+    curl -fL "$nvimurl" -o "$nvim" -z "$nvim" >> /dev/null && echo_succes "neovim-nightly downloaded" || echo_error "neovim-nightly download failed"
     chmod u+x "$nvim" && echo_succes "neovim-nightly installed"
 }
 
@@ -80,7 +91,10 @@ downloadBig5
 for i in /tmp/deb/*.deb
 do
     package=$(echo $i | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
-    echo_info "Installing $package"
-    indeb $i
+    ask "Install $package?"
+    if [ $? -eq 1 ]; then
+        echo_info "Installing $package"
+        indeb $i
+    fi
 done
 
