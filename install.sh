@@ -1,6 +1,4 @@
 
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
-
 INFO_COLOR='\033[1;34m'
 NO_COLOR='\033[0m'
 DOWNLOAD_COLOR='\033[1;35m'
@@ -61,10 +59,10 @@ downloadBig5(){
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.config/fzf || echo_error "fzf download failed"
     ~/.config/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
 
-    downloadPackage http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb -P /tmp/deb/
-    downloadPackage https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb -P /tmp/deb/
-    downloadPackage https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb -P /tmp/deb/
-    downloadPackage https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -P /tmp/deb/
+    downloadPackage http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb
+    downloadPackage https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb
+    downloadPackage https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb
+    downloadPackage https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb
 }
 
 downloadNeovim(){
@@ -72,27 +70,32 @@ downloadNeovim(){
     nvim="${BIN_PATH}/nvim"
     nvimurl="https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
     mkdir -vp "$(dirname "$nvim")"
-    curl -fL "$nvimurl" -o "$nvim" -z "$nvim" >> /dev/null && echo_succes "neovim-nightly downloaded" || echo_error "neovim-nightly download failed"
+    curl -fL "$nvimurl" -o "$nvim" -z "$nvim" && echo_succes "neovim-nightly downloaded" || echo_error "neovim-nightly download failed"
     chmod u+x "$nvim" && echo_succes "neovim-nightly installed"
 }
 
+init(){
+    mkdir -p $BIN_PATH
+    downloadNeovim
 
-mkdir -p $BIN_PATH
+    mkdir -p /tmp/deb/installation
+    cd /tmp/deb
 
-downloadNeovim
-mkdir -p /tmp/deb/installation
+    [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='${PATH}:${BIN_PATH}'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
 
-cd /tmp/deb || mkdir -p /tmp/deb && cd /tmp/deb
+    downloadBig5
 
-[[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='${PATH}:${BIN_PATH}'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
-downloadBig5
+    for i in /tmp/deb/*.deb
+    do
+        package=$(echo $i | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
+        if ask "Install $package?"; then
+            echo_info "Installing $package"
+            indeb $i
+        fi
+    done
+}
 
-for i in /tmp/deb/*.deb
-do
-    package=$(echo $i | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
-    if ask "Install $package?"; then
-        echo_info "Installing $package"
-        indeb $i
-    fi
-done
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+nvm install 22 && init()
 
