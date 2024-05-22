@@ -66,10 +66,10 @@ download_xcfe4_terminal_theme(){
     mkdir -p ~/.local/share/xfce4/terminal/colorschemes/ && echo_succes "Created ~/.local/share/xfce4/terminal/colorschemes/" || echo_error "Failed to create ~/.local/share/xfce4/terminal/colorschemes/"
 
     echo_download "Downloading themes"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-frappe.theme "Downloaded frappe for xfce4 terminal"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-latte.theme "Downloaded latte for xfce4 terminal"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-mocha.theme "Downloaded mocha for xfce4 terminal"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://github.com/catppuccin/xfce4-terminal/blob/main/themes/catppuccin-macchiato.theme "Downloaded macchiato for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-frappe.theme "Downloaded frappe for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-latte.theme "Downloaded latte for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-mocha.theme "Downloaded mocha for xfce4 terminal"
+    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-macchiato.theme "Downloaded macchiato for xfce4 terminal"
 }
 
 config_neovim(){
