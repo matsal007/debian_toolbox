@@ -61,17 +61,6 @@ download_batppuccin(){
     echo '--theme="Catppuccin Mocha"' >> "$configfile" && echo_succes "Added theme to config" || echo_error "Failed to add theme to config"
 }
 
-download_xcfe4_terminal_theme(){
-    echo_info "Creating ~/.local/share/xfce4/terminal/colorschemes/"
-    mkdir -p ~/.local/share/xfce4/terminal/colorschemes/ && echo_succes "Created ~/.local/share/xfce4/terminal/colorschemes/" || echo_error "Failed to create ~/.local/share/xfce4/terminal/colorschemes/"
-
-    echo_download "Downloading themes"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-frappe.theme "Downloaded frappe for xfce4 terminal"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-latte.theme "Downloaded latte for xfce4 terminal"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-mocha.theme "Downloaded mocha for xfce4 terminal"
-    download ~/.local/share/xfce4/terminal/colorschemes/ https://raw.githubusercontent.com/catppuccin/xfce4-terminal/main/themes/catppuccin-macchiato.theme "Downloaded macchiato for xfce4 terminal"
-}
-
 config_neovim(){
     file=$(<./templates/init.lua) || echo_error "Failed to read init.lua"
     mkdir -p ~/.config/nvim && echo_info "Created ~/.config/nvim"
@@ -80,18 +69,11 @@ config_neovim(){
 }
 
 config_shell(){
-    sed -i 's/OSH_THEME="font"/OSH_THEME="robbyrussell"/g' ~/.bashrc
-    echo "set -o vi" >> ~/.bashrc
     file=$(cat ./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
     echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
 }
-
-if ask "Install catppuccin for xfce4 terminal?"; then
-    echo_info "Installing catppuccin for xfce4 terminal"
-    download_xcfe4_terminal_theme
-fi
 
 if ask "Configure neovim?"; then
     echo_info "Configuring neovim"

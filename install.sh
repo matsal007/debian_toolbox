@@ -7,6 +7,7 @@ ERROR_COLOR='\033[1;31m'
 
 BIN_PATH=$HOME/.local/bin
 
+
 echo_info(){
     echo -e "${INFO_COLOR}[INFO] | $1${NO_COLOR}"
 }
@@ -33,71 +34,112 @@ ask() {
     fi
 }
 
-indeb(){
-    package_name=$(echo $1 | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
-    cd /tmp/deb/installation
-    mv $1 /tmp/deb/installation
+downloadTmux(){
+    echo_download "tmux"
+    sudo pacman -Syu --noconfirm tmux
 
-    echo_info "Unpacking $package_name"
+    echo_info "Installing Tmux Plugin Manager"
+    git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm \
+        && echo_succes "Installed Tmux Plugin Manager" \
+        || echo_error "Failed to install Tmux Plugin Manager"
 
-    ar -x *.deb || echo_error "$package_name unpacking failed"
-    tar -xvf data.tar.xz || echo_error "$package_name unpacking data.tar.xz failed"
+    echo_info "Changing Tmux config"
 
-    echo_info "Moving $package_name to ~/.local/bin"
-    mv usr/bin/* "${BIN_PATH}" && echo_succes "$package_name installed"
-    rm -rf * 
+    file=$(<./templates/tmux.conf) || echo_error "Failed to read tmux.conf"
+
+    mkdir -p ~/.config/tmux && echo_info "Created ~/.config/tmux"
+    touch ~/.config/tmux/tmux.conf \
+        && echo_info "Created ~/.config/tmux/tmux.conf" \
+        || echo_error "Failed to create ~/.config/tmux/tmux.conf"
+
+    echo "$file" >> "$HOME/.config/tmux/tmux.conf" \
+        && echo_succes "Changed Tmux config" \
+        || echo_error "Failed to write to tmux.conf"
+
+    bindings=$(<./templates/tmux.bindings.conf) \
+        || echo_error "Failed to read bindings.tmux"
+
+    touch ~/.config/tmux/bindings.conf \
+        && echo_info "Created ~/.config/tmux/bindings.conf" \
+        || echo_error "Failed to create ~/.config/tmux/bindings.conf"
+
+    echo "$bindings" >> "$HOME/.config/tmux/bindings.conf" \
+        && echo_succes "Changed Tmux bindings" \
+        || echo_error "Failed to write to bindings.tmux"
+
 }
 
-downloadPackage(){
-    package_name=$(echo $1 | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
-    echo_download "$package_name"
-    wget $1 -P /tmp/deb/ >> /dev/null && echo_succes "$package_name downloaded" || echo_error "$package_name download failed"
-}
-
-downloadBig5(){
+downloadBig8(){
     echo_download "fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.config/fzf || echo_error "fzf download failed"
-    ~/.config/fzf/install && echo_succes "fzf installed" || echo_error "fzf install failed"
-
-    downloadPackage http://ftp.debian.org/debian/pool/main/t/tree/tree_1.8.0-1+b1_amd64.deb
-    downloadPackage https://github.com/sharkdp/fd/releases/download/v10.1.0/fd_10.1.0_amd64.deb
-    downloadPackage https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb
-    downloadPackage https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.local/share/fzf || echo_error "fzf download failed"
+    ~/.local/share/fzf/install --xdg && echo_succes "fzf installed" || echo_error "fzf install failed"
+    sudo pacman -Syu --noconfirm tree lsd bat fd ripgrep neovim
 }
 
-downloadNeovim(){
-    echo_download "neovim-nightly"
-    nvim="${BIN_PATH}/nvim"
-    nvimurl="https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
-    mkdir -vp "$(dirname "$nvim")"
-    curl -fL "$nvimurl" -o "$nvim" -z "$nvim" && echo_succes "neovim-nightly downloaded" || echo_error "neovim-nightly download failed"
-    chmod u+x "$nvim" && echo_succes "neovim-nightly installed"
+setup_junest(){
+    echo_download "junest"
+    wget https://github.com/fsquillace/junest/archive/refs/heads/master.zip
+    unzip master.zip
+    rm -f master.zip
+    mkdir -p ~/.local/share
+    mv junest-master ~/.local/share/junest
+
+    echo "export PATH=~/.local/share/junest/bin:\$PATH" >> ~/.bashrc
+    echo "export SHELL=~/.junest/bin/zsh" >> ~/.bashrc
+    echo '[ -z "$ZSH_VERSION" ] && exec "$SHELL" -l' >> ~/.bashrc
+    echo "[ -z junest ] && junest -- /bin/zsh" >> ~/.bashrc
+
+    export PATH=~/.local/share/junest/bin:$PATH
+    junest setup
+
+    echo_succes "Junest installed"
+}
+
+setup_mirrorlist(){
+    echo_info "Changing mirror list"
+    mirrors=$(cat ./templates/mirrorlist) || echo_error "Failed to read mirrorlist"
+    sudo echo "$mirrors" > /etc/pacman.d/mirrorlist && echo_succes "Changed mirror list"
+}
+
+locale-setup(){
+    sudo sed -i 's/#pt_BR.UTF-8/pt_BR.UTF-8' /etc/locale.gen
+    sudo locale-gen
+}
+
+install_dependencies(){
+    sudo pacman -Syyu archlinux-keyring
+    sudo pacman -S --ignore sudo glibc base wget exa openssh ldns make\
+    autoconf unzip base-devel byobu man htop zsh aria2 mosh vim nano bind git\
+    python linux-headers ttf-jetbrains-mono ttf-jetbrains-mono-nerd 
+
+    locale-setup
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
 init(){
+    echo_info "Installing Junest"
+    setup_junest()
+    junest
+
+    echo_info "verifying root"
+    user=$(sudo whoami)
+    if [ "$user" != "root" ]; then
+        echo_error "Error: Junest"
+        exit 1
+    fi
+
+    setup_mirrorlist
+    install_dependencies
+
+    echo_info "Changing path to include local bin"
+
     mkdir -p $BIN_PATH
-    downloadNeovim
+    [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='\$PATH:${BIN_PATH}'" >> ~/.zshrc && echo_succes "Changed path to include local bin"
 
-    mkdir -p /tmp/deb/installation
-    cd /tmp/deb
-
-    [[ ! "$PATH" =~ $BIN_PATH ]] && echo "export PATH='${PATH}:${BIN_PATH}'" >> ~/.bashrc && echo_succes "Changed path to include local bin"
-
-    downloadBig5
-
-    for i in /tmp/deb/*.deb
-    do
-        package=$(echo $i | rev | cut -d'/' -f1 | rev | cut -d'_' -f1)
-        if ask "Install $package?"; then
-            echo_info "Installing $package"
-            indeb $i
-        fi
-    done
+    downloadBig8
+    download_tmux
 }
 
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.bashrc
-nvm install 22 
 init
 
