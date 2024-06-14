@@ -7,7 +7,6 @@ ERROR_COLOR='\033[1;31m'
 
 BIN_PATH=$HOME/.local/bin
 
-
 echo_info(){
     echo -e "${INFO_COLOR}[INFO] | $1${NO_COLOR}"
 }
@@ -110,7 +109,7 @@ install_dependencies(){
     sudo pacman -Syyu archlinux-keyring
     sudo pacman -S --ignore sudo glibc base wget exa openssh ldns make\
     autoconf unzip base-devel byobu man htop zsh aria2 mosh vim nano bind git\
-    python linux-headers ttf-jetbrains-mono ttf-jetbrains-mono-nerd 
+    python linux-headers ttf-jetbrains-mono ttf-jetbrains-mono-nerd kitty
 
     locale-setup
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
