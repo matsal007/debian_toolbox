@@ -70,9 +70,9 @@ config_neovim(){
 
 config_shell(){
     file=$(cat ./templates/aliases.sh) || echo_error "Failed to read aliaeses.sh"
-    echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    echo "$file" >> "$HOME/.zshrc" && echo_succes "Configured shell" || echo_error "Failed to write to zshrc"
     file=$(cat ./templates/functions.sh) || echo_error "Failed to read functions.sh"
-    echo "$file" >> "$HOME/.bashrc" && echo_succes "Configured shell" || echo_error "Failed to write to bashrc"
+    echo "$file" >> "$HOME/.zshrc" && echo_succes "Configured shell" || echo_error "Failed to write to zshrc"
 }
 
 if ask "Configure neovim?"; then
