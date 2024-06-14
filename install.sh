@@ -117,7 +117,7 @@ install_dependencies(){
 
 init(){
     echo_info "Installing Junest"
-    setup_junest()
+    setup_junest
     junest
 
     echo_info "verifying root"
